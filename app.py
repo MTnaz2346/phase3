@@ -34,14 +34,14 @@ if page == "EDA Dashboard":
         st.pyplot(plt.gcf())
         plt.clf()
 
-    with col2:
-        st.subheader("Depression by Marital Status")
-        st.bar_chart(data.groupby("MaritalStatus")["Depression"].mean())
+    # with col2:
+    #     st.subheader("Depression by Marital Status")
+    #     st.bar_chart(data.groupby("MaritalStatus")["Depression"].mean())
 
-        st.subheader("Children Count Distribution")
-        sns.countplot(x="Children", data=data)
-        st.pyplot(plt.gcf())
-        plt.clf()
+    #     st.subheader("Children Count Distribution")
+    #     sns.countplot(x="Children", data=data)
+    #     st.pyplot(plt.gcf())
+    #     plt.clf()
 
 # --- Model Performance ---
 elif page == "Model Performance":
