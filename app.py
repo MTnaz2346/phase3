@@ -2,55 +2,45 @@
 import streamlit as st
 import pandas as pd
 import joblib
-# Make sure utils.py contains preprocess_input and load_model
 from utils import preprocess_input, load_model
 
 st.set_page_config(page_title="Depression Predictor", layout="centered")
 
-# Load model (Make sure the file name matches exactly)
-# It's good practice to also load any scalers if they were used
+# Load model
 try:
     model = load_model("model.pkl")
-    # Example: If a scaler was saved during training:
-    # scaler = load_model("scaler.pkl") # Load scaler if you used one
 except FileNotFoundError:
-    st.error("Error: model.pkl (or scaler.pkl) not found. Make sure the files are in the correct directory.")
-    st.stop() # Stop the app if model can't be loaded
+    st.error("Error: model.pkl not found.")
+    st.stop()
 except Exception as e:
     st.error(f"Error loading model: {e}")
     st.stop()
 
-
 st.title("🧠 Depression Risk Predictor")
 st.markdown("Enter the individual's information to predict depression risk.")
 page = st.sidebar.radio("Navigate", ["Live Predictor", "Model Metrics"])
+
 if page == "Live Predictor":
     st.header("Live Prediction")
 
-    # Input form with original string values, mapped later
     age = st.slider("Age", 10, 100, 30)
-
     education = st.selectbox("Education Level", [
         'High School', 'Associate Degree', "Bachelor's Degree", "Master's Degree", 'PhD'
     ])
     children = st.number_input("Number of Children", min_value=0, max_value=10, value=0)
-
     smoking = st.selectbox("Smoking Status", ['Non-smoker', 'Former', 'Current'])
     physical_activity = st.selectbox("Physical Activity Level", ['Sedentary', 'Moderate', 'Active'])
-
     employment = st.selectbox("Employment Status", ['Unemployed', 'Employed'])
     income = st.number_input("Income", min_value=0, value=50000)
-
     alcohol = st.selectbox("Alcohol Consumption", ['Low', 'Moderate', 'High'])
     diet = st.selectbox("Dietary Habits", ['Unhealthy', 'Moderate', 'Healthy'])
     sleep = st.selectbox("Sleep Patterns", ['Poor', 'Fair', 'Good'])
-
     mental_illness = st.selectbox("History of Mental Illness", [0, 1])
     substance_abuse = st.selectbox("History of Substance Abuse", [0, 1])
     family_history = st.selectbox("Family History of Depression", [0, 1])
+    chronic_conditions = st.selectbox("Do they have chronic medical conditions?", [0, 1])
 
     if st.button("Predict"):
-        # Mapping string labels to encoded values
         input_df = pd.DataFrame([{
             "Age": age,
             "Education Level": {
@@ -93,11 +83,11 @@ if page == "Live Predictor":
             }[sleep],
             "History of Mental Illness": mental_illness,
             "History of Substance Abuse": substance_abuse,
-            "Family History of Depression": family_history
+            "Family History of Depression": family_history,
+            "Chronic Medical Conditions": chronic_conditions
         }])
 
         try:
-            # If your model expects scaled input, make sure preprocess_input() does scaling
             processed = preprocess_input(input_df)
             prediction = model.predict(processed)[0]
             proba = model.predict_proba(processed)[0][1]
@@ -107,16 +97,11 @@ if page == "Live Predictor":
         except Exception as e:
             st.error(f"Prediction failed: {e}")
 
-
-
-
-# --- Model Metrics ---
 elif page == "Model Metrics":
     st.header("Model Performance Metrics")
     st.metric("Accuracy", "85%")
     st.metric("Precision", "80%")
     st.metric("Recall", "82%")
-
-    # Optional: Add image or confusion matrix
     st.image("confusion_matrix.png", caption="Confusion Matrix (optional)")
+
 

@@ -1,14 +1,13 @@
-
 import pandas as pd
 import joblib
 
 def load_model(path: str):
-    """Load the trained model from a pickle file."""
     return joblib.load(path)
 
 def preprocess_input(df: pd.DataFrame) -> pd.DataFrame:
     df = df.copy()
 
+    # These are the exact features the model expects (based on the error)
     expected_cols = [
         'Age',
         'Education Level',
@@ -20,18 +19,17 @@ def preprocess_input(df: pd.DataFrame) -> pd.DataFrame:
         'Alcohol Consumption',
         'Dietary Habits',
         'Sleep Patterns',
-        'History of Mental Illness',
         'History of Substance Abuse',
-        'Family History of Depression'
+        'Family History of Depression',
+        'Chronic Medical Conditions'  # required because it was mistakenly included during training
     ]
 
+    # Fill missing columns with 0 if not included in form
     for col in expected_cols:
         if col not in df.columns:
             df[col] = 0
 
     df = df[expected_cols]
-
-
-
     return df
+
 
