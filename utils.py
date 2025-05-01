@@ -1,4 +1,3 @@
-# utils.py
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -131,6 +130,29 @@ def create_medical_conditions_plot(data):
     plt.xticks(rotation=0)
     return fig
 
-
+# Function to create education vs income scatter plot
+def create_education_income_plot(data):
+    processed_data = preprocess_data(data)
+    
+    fig, ax = plt.subplots(figsize=(10, 6))
+    sns.scatterplot(x='Education Level', y='Income', data=processed_data, ax=ax)
+    
+    # Add regression line
+    model, _, _ = train_income_model(processed_data)
+    education_levels = np.array([0, 1, 2, 3, 4]).reshape(-1, 1)
+    predicted_income = model.predict(education_levels)
+    
+    ax.plot(education_levels, predicted_income, color='red', linewidth=2)
+    
+    # Add labels and title
+    ax.set_xlabel('Education Level')
+    ax.set_ylabel('Income')
+    ax.set_title('Income vs Education Level with Linear Regression')
+    
+    # Set x-axis ticks to original education levels
+    ax.set_xticks([0, 1, 2, 3, 4])
+    ax.set_xticklabels(['High School', 'Associate', 'Bachelor\'s', 'Master\'s', 'PhD'])
+    
+    return fig
 
 
