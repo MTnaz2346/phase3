@@ -31,9 +31,7 @@ def preprocess_input(df: pd.DataFrame) -> pd.DataFrame:
 
     df = df[expected_cols]
 
-    # Optional: apply saved scaler
-    scaler = joblib.load("scaler.pkl")
-    df_scaled = pd.DataFrame(scaler.transform(df), columns=expected_cols)
 
-    return df_scaled
+
+    return df
 
