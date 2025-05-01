@@ -1,4 +1,4 @@
-# utils.py
+
 import pandas as pd
 import joblib
 
@@ -9,22 +9,33 @@ def load_model(path: str):
 def preprocess_input(df: pd.DataFrame) -> pd.DataFrame:
     """Apply the same preprocessing as in training to incoming data."""
 
-    # Example preprocessing — this should match what was done in the notebook
     df = df.copy()
 
-    # Encode MaritalStatus as dummy variables (one-hot)
-    df = pd.get_dummies(df, columns=["MaritalStatus"], drop_first=True)
+    # No need for one-hot encoding or MaritalStatus logic
+    # Ensure columns match the order and names used in training
 
-    # Ensure all expected columns are present (some may be missing depending on selected value)
-    expected_cols = ['Age', 'Income', 'Children',
-                     'MaritalStatus_Married',
-                     'MaritalStatus_Single',
-                     'MaritalStatus_Widowed']
+    expected_cols = [
+        'Age',
+        'Education Level',
+        'Number of Children',
+        'Smoking Status',
+        'Physical Activity Level',
+        'Employment Status',
+        'Income',
+        'Alcohol Consumption',
+        'Dietary Habits',
+        'Sleep Patterns',
+        'History of Mental Illness',
+        'History of Substance Abuse',
+        'Family History of Depression'
+    ]
+
+    # Fill missing columns with zeros if needed
     for col in expected_cols:
         if col not in df.columns:
             df[col] = 0
 
-    # Reorder columns
+    # Reorder to match training
     df = df[expected_cols]
 
     return df
