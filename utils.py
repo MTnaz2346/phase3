@@ -2,10 +2,103 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
 
 # Function to load the dataset
 def load_data():
     return pd.read_csv('depression_data.csv')
+
+# Function to preprocess data
+def preprocess_data(data):
+    # Create a copy to avoid modifying the original
+    processed_data = data.copy()
+    
+    # Education level mapping
+    eduMap = {
+        'High School': 0,
+        'Associate Degree': 1,
+        "Bachelor's Degree": 2,
+        "Master's Degree": 3,
+        'PhD': 4
+    }
+    processed_data["Education Level"] = processed_data["Education Level"].map(eduMap)
+    
+    # Physical activity level mapping
+    actMap = {
+        'Sedentary': 0,
+        'Moderate': 1,
+        'Active': 2
+    }
+    processed_data["Physical Activity Level"] = processed_data["Physical Activity Level"].map(actMap)
+    
+    # Sleep patterns mapping
+    sleepMap = {
+        'Fair': 1,
+        'Good': 2,
+        'Poor': 0
+    }
+    processed_data['Sleep Patterns'] = processed_data['Sleep Patterns'].map(sleepMap)
+    
+    # Alcohol consumption mapping
+    alcMap = {
+        'Moderate': 1,
+        'High': 2,
+        'Low': 0
+    }
+    processed_data['Alcohol Consumption'] = processed_data['Alcohol Consumption'].map(alcMap)
+    
+    # Dietary habits mapping
+    dietMap = {
+        'Moderate': 1,
+        'Unhealthy': 0,
+        'Healthy': 2
+    }
+    processed_data['Dietary Habits'] = processed_data['Dietary Habits'].map(dietMap)
+    
+    # Smoking status mapping
+    smokeMap = {
+        'Non-smoker': 2,
+        'Former': 1,
+        'Current': 0
+    }
+    processed_data['Smoking Status'] = processed_data['Smoking Status'].map(smokeMap)
+    
+    # Yes/No mappings
+    yesMap = {
+        'Yes': 1,
+        'No': 0
+    }
+    processed_data['History of Mental Illness'] = processed_data['History of Mental Illness'].map(yesMap)
+    processed_data['History of Substance Abuse'] = processed_data['History of Substance Abuse'].map(yesMap)
+    processed_data['Family History of Depression'] = processed_data['Family History of Depression'].map(yesMap)
+    processed_data['Chronic Medical Conditions'] = processed_data['Chronic Medical Conditions'].map(yesMap)
+    
+    # Employment status mapping
+    empMap = {
+        'Unemployed': 0,
+        'Employed': 1
+    }
+    processed_data['Employment Status'] = processed_data['Employment Status'].map(empMap)
+    
+    return processed_data
+
+# Function to train the linear regression model
+def train_income_model(data):
+    X = data[["Education Level"]]
+    y = data["Income"]
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1, random_state=83)
+    
+    model = LinearRegression()
+    model.fit(X_train, y_train)
+    
+    # Calculate model metrics
+    y_pred = model.predict(X_test)
+    mse = np.mean((y_test - y_pred) ** 2)
+    r2 = model.score(X_test, y_test)
+    
+    return model, mse, r2
 
 # Function to create histogram figure
 def create_histogram(data, column_name):
