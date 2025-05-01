@@ -7,7 +7,7 @@ from utils import preprocess_input, load_model  # make sure utils.py contains th
 st.set_page_config(page_title="Depression Predictor", layout="centered")
 
 # Load model
-model = load_model("model.pk1")  # Make sure the file name matches exactly
+model = load_model("model.pkl")  # Make sure the file name matches exactly
 
 st.title("🧠 Depression Risk Predictor")
 st.markdown("Enter the individual's information to predict depression risk.")
