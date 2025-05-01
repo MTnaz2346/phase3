@@ -1,8 +1,11 @@
+
+
+# app.py
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-from utils import load_data, plot_histogram, plot_marital_status, plot_medical_conditions
+from utils import load_data, create_histogram, create_marital_status_plot, create_medical_conditions_plot
 
 # Title of the Streamlit app
 st.title('Depression Data Exploration')
@@ -16,18 +19,23 @@ st.write(data.describe())
 
 # Display histograms for Age, Number of Children, and Income
 st.header('Age Distribution')
-plot_histogram(data, 'Age')
+age_fig = create_histogram(data, 'Age')
+st.pyplot(age_fig)
 
 st.header('Number of Children Distribution')
-plot_histogram(data, 'Number of Children')
+children_fig = create_histogram(data, 'Number of Children')
+st.pyplot(children_fig)
 
 st.header('Income Distribution')
-plot_histogram(data, 'Income')
+income_fig = create_histogram(data, 'Income')
+st.pyplot(income_fig)
 
 # Marital Status Breakdown
 st.header('Breakdown of Marital Status Among Depressed Individuals')
-plot_marital_status(data)
+marital_fig = create_marital_status_plot(data)
+st.pyplot(marital_fig)
 
 # Chronic Medical Conditions and Depression
 st.header('Breakdown of Chronic Medical Conditions and Depression')
-plot_medical_conditions(data)
+medical_fig = create_medical_conditions_plot(data)
+st.pyplot(medical_fig)
