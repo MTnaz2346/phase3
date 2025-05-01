@@ -7,12 +7,7 @@ def load_model(path: str):
     return joblib.load(path)
 
 def preprocess_input(df: pd.DataFrame) -> pd.DataFrame:
-    """Apply the same preprocessing as in training to incoming data."""
-
     df = df.copy()
-
-    # No need for one-hot encoding or MaritalStatus logic
-    # Ensure columns match the order and names used in training
 
     expected_cols = [
         'Age',
@@ -30,12 +25,15 @@ def preprocess_input(df: pd.DataFrame) -> pd.DataFrame:
         'Family History of Depression'
     ]
 
-    # Fill missing columns with zeros if needed
     for col in expected_cols:
         if col not in df.columns:
             df[col] = 0
 
-    # Reorder to match training
     df = df[expected_cols]
 
-    return df
+    # Optional: apply saved scaler
+    scaler = joblib.load("scaler.pkl")
+    df_scaled = pd.DataFrame(scaler.transform(df), columns=expected_cols)
+
+    return df_scaled
+
